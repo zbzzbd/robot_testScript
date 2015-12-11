@@ -42,3 +42,15 @@ testCase
     @{val3}    set variable    1    2    3
     log    ${val3[1]}
     run keyword    log    tanks you    warn
+
+list
+    @{userlist}    Create List    a    b    c
+    log    @{userlist}[2]
+    log    ${userlist[1]}
+    @{listA}    Create List    1    2    3
+    @{listB}    Create List    4    5    6
+    @{listC}    Create List    ${listA}    ${listB}
+    log    ${listC[1][1]}
+    log    @{listC[1]}[1]
+    ${listD}    Create List    1234    warn
+    log    =@{listD}=
