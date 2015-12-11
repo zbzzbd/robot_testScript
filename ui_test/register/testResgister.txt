@@ -1,0 +1,44 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../keyword.txt
+Library           Collections
+Library           String
+
+*** Variables ***
+${base_url}       http://test.www.wanbisai.com/register
+@{temp}           zbz    zbd    zbe    zby
+
+*** Test Cases ***
+test_register
+    [Documentation]    进入注册页面
+    open Browser    ${base_url}
+    ${title}    get title
+    log    ${title}
+    should be equal    ${title}    玩比赛 | 注册
+    close browser
+
+test_register_mobile
+    [Documentation]    手机注册
+    open Browser    ${base_url}
+    ${title}    get title
+    sleep    2
+    Click Element    link=手机
+    input text    id=phone    13611873856
+    input text    id=password    123456
+    input text    id=password_confirm    123456
+    click element    id=photo-code-btn
+    click element    xpath=//button[@type='submit']
+
+test_sql
+    ${s}    operation_sql    select * from party
+    log    ${s}
+
+testCase
+    log    ${temp}
+    logmany    @{temp}
+    loglist    ${temp}
+    ${a}    set variable    1
+    log    ${a}
+    @{val3}    set variable    1    2    3
+    log    ${val3[1]}
+    run keyword    log    tanks you    warn

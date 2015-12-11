@@ -1,0 +1,30 @@
+*** Settings ***
+Library           Collections
+Library           String
+Library           Selenium2Library
+Library           Database Library
+
+*** Variables ***
+${base_url}       http://test.www.wanbisai.com
+
+*** Keywords ***
+mobile_register
+    [Arguments]    ${mobile_phone}    ${password}    ${sms_code}
+    [Documentation]    手机注册
+    open Browser    ${base_url}
+    ${title}    get title
+    sleep    2
+    Click Element    link=手机
+    input text    id=phone    ${mobile_phone}
+    input text    id=password    ${password}
+    input text    id=password_confirm    ${password}
+    click element    id=photo-code-btn
+    input text    id=sms_code    ${sms_code}
+    click element    xpath=//button[@type='submit']
+
+operation_sql
+    [Arguments]    ${sql}
+    Connect To Database Using Custom Params    pymysql    host="rds2g2rdxxt711sworh8.mysql.rds.aliyuncs.com", port=3306,user="chinarun",passwd="chEtHe7h", db="chinarun",charset ="utf8"
+    ${result}    query    ${sql}
+    Disconnect From Database
+    [Return]    ${result}
