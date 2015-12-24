@@ -1,0 +1,76 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Database Library
+Variables         dev_conf.py
+
+*** Variables ***
+
+*** Keywords ***
+login
+    [Arguments]    ${email}    ${password}    ${message}
+    [Documentation]    登录
+    open Browser    ${base_url}
+    ${title}    get title
+    should be equal    ${title}    项目管理系统 | 登录
+    input text    name=email    ${email}
+    input text    name=password    ${password}
+    click Element    css=input[type='submit']
+    Page Should Contain    ${message}
+
+modify_password
+    [Arguments]    ${old_password}    ${new_password}    ${message}
+    Click Element    link=修改密码
+    input text    name=oldPassword    ${old_password}
+    input text    name=newPassword    ${new_password}
+    input text    name=newPassword_confirm    ${new_password}
+    Click Element    css=input[type='submit']
+    Page should Contain    ${message}
+
+exit
+    [Documentation]    退出
+    Click Element    link=退出
+
+project_create
+    [Arguments]    ${project_name}    ${scale}    ${employeer}    ${art}    ${tech}
+    click Element    link=项目登记
+    input text    name=name    ${project_name}
+    input text    name=scale    ${scale}
+    Execute javascript    $('#projectBussiness').val(${employeer})
+    Execute javascript    $('#projectArt').val(${art})
+    Execute javascript    $('#projectTech').val(${tech})
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div[2]/div/form/div[10]/div[1]
+    [Return]    ${project_name}
+
+project_process
+    [Documentation]    搜索验证
+    click button    xpath=/html/body/div[1]/div/div[2]/div[2]/div[1]/form/div[3]/button
+    ${rows}    get table rows    css=table
+    log    ${rows}
+    [Return]    ${rows}
+
+database
+    [Arguments]    ${sql}
+    Connect To Database Using Custom Params    pymysql    host="${db_url}",port=${db_port}, user="${db_user}",passwd="${db_password}",db="${db_name}",charset="utf8"
+    ${result}    query    ${sql}
+    Disconnect From Database
+    [Return]    ${result}
+
+project_edit
+    [Arguments]    ${nums}
+    click Link    xpath=/html/body/div[1]/div/div[2]/div[2]/div[2]/div[1]/table/tbody/tr[1]/td[15]/a
+    Clear Element Text    name=scale
+    input text    name=scale    ${nums}
+    click Element    xpath=/html/body/div[1]/div/div[2]/div[2]/div/form/div[10]/div[1]
+
+job_create
+    [Arguments]    ${project_id}    ${type}    ${department}    ${target}    ${employee}    ${time}
+    [Documentation]    Job创建
+    Click link    link=作业登记
+    Execute javascript    $('.ui.form select[name="project_id"]').val(${project_id})
+    Execute javascript    $('.ui.form select[name="type"]').val(${type})
+    Execute javascript    $('#department').val(${department})
+    input text    name=target    ${target}
+    Execute javascript    $('#employee').val(${employee})
+    input text    id=datetimepicker-finish-time    ${time}
+    input text    name=message    请尽快完成，谢谢
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div[2]/div/form/div[14]/div[1]

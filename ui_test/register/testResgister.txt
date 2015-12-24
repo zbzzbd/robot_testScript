@@ -3,6 +3,8 @@ Library           Selenium2Library
 Resource          ../keyword.txt
 Library           Collections
 Library           String
+Variables         vars.py
+Library           ReadAndWriteExcel
 
 *** Variables ***
 ${base_url}       http://test.www.wanbisai.com/register
@@ -54,3 +56,10 @@ list
     log    @{listC[1]}[1]
     ${listD}    Create List    1234    warn
     log    =@{listD}=
+
+test_variable
+    log    ${db_url}
+    log    ${db_user}
+    log    ${db_password}
+    log    ${db_prot}
+    log    ${db_name}
