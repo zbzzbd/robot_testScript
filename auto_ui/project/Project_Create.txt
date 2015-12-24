@@ -1,0 +1,10 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../keyword_manager.txt
+
+*** Test Cases ***
+create
+    [Documentation]    项目正常登记（登记者唐霞）
+    ${date}    gettime    epoch
+    login    chinaruntx@chinarun.com    123456    修改密码
+    project_create    chinarun_${date}    1000    5    23    14
